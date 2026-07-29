@@ -1,0 +1,207 @@
+/* ==========================================
+   Global Styles
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    min-height:100vh;
+}
+
+/* ==========================================
+   Navbar
+========================================== */
+
+.navbar{
+    background:#0d6efd;
+}
+
+.navbar-brand{
+    color:#fff !important;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.nav-link{
+    color:#fff !important;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    color:#ffd54f !important;
+}
+
+/* ==========================================
+   Glass Card
+========================================== */
+
+.glass-card{
+    width:420px;
+    margin:auto;
+    padding:30px;
+    border-radius:20px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(12px);
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
+/* ==========================================
+   Dashboard Cards
+========================================== */
+
+.card-box{
+    border:none;
+    border-radius:18px;
+    transition:.3s;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.card-box:hover{
+    transform:translateY(-8px);
+}
+
+.icon{
+    font-size:50px;
+    color:#0d6efd;
+    margin-bottom:15px;
+}
+
+/* ==========================================
+   Statistics Cards
+========================================== */
+
+.stat-card{
+    border-radius:15px;
+    padding:25px;
+    color:#fff;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,.2);
+}
+
+.blue{
+    background:#0d6efd;
+}
+
+.green{
+    background:#198754;
+}
+
+.red{
+    background:#dc3545;
+}
+
+.orange{
+    background:#fd7e14;
+}
+
+/* ==========================================
+   Buttons
+========================================== */
+
+.btn{
+    border-radius:10px;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:scale(1.03);
+}
+
+/* ==========================================
+   Tables
+========================================== */
+
+.table{
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.table th{
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+}
+
+.table td{
+    text-align:center;
+    vertical-align:middle;
+}
+
+/* ==========================================
+   Forms
+========================================== */
+
+.form-control{
+    border-radius:10px;
+}
+
+.form-control:focus{
+    border-color:#0d6efd;
+    box-shadow:0 0 8px rgba(13,110,253,.3);
+}
+
+/* ==========================================
+   Alerts
+========================================== */
+
+.alert{
+    border-radius:10px;
+}
+
+/* ==========================================
+   Footer
+========================================== */
+
+.footer{
+    margin-top:50px;
+    padding:18px;
+    background:#0d6efd;
+    color:#fff;
+    text-align:center;
+}
+
+/* ==========================================
+   Links
+========================================== */
+
+a{
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:none;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:768px){
+
+    .glass-card{
+        width:95%;
+    }
+
+    .navbar-brand{
+        font-size:20px;
+    }
+
+    .icon{
+        font-size:40px;
+    }
+
+    .stat-card{
+        margin-bottom:20px;
+    }
+
+    .table{
+        font-size:14px;
+    }
+}
