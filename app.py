@@ -3,9 +3,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db, create_tables
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key_123"
+app.secret_key = "your_secret_key"
 
-# Create database tables
+# Create database
 create_tables()
 
 
@@ -18,7 +18,7 @@ def home():
 
 
 # ===========================
-# Register
+# User Registration
 # ===========================
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -44,43 +44,30 @@ def register():
 
         if existing:
             conn.close()
-            flash("Mobile number or Email already registered.", "danger")
+            flash("User already exists.", "danger")
             return redirect(url_for("register"))
 
         hashed_password = generate_password_hash(password)
 
         conn.execute(
             """
-            INSERT INTO users(name, mobile, email, password)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO users(name,mobile,email,password)
+            VALUES(?,?,?,?)
             """,
             (name, mobile, email, hashed_password)
         )
 
         conn.commit()
-
-        user = conn.execute(
-            "SELECT * FROM users WHERE mobile=?",
-            (mobile,)
-        ).fetchone()
-
         conn.close()
 
-        session["logged_in"] = True
-        session["user_id"] = user["id"]
-        session["name"] = user["name"]
-        session["mobile"] = user["mobile"]
-        session["email"] = user["email"]
-
-        flash("Registration Successful!", "success")
-
-        return redirect(url_for("dashboard"))
+        flash("Registration Successful. Please Login.", "success")
+        return redirect(url_for("login"))
 
     return render_template("register.html")
 
 
 # ===========================
-# Login
+# User Login
 # ===========================
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -101,33 +88,33 @@ def login():
 
         if user and check_password_hash(user["password"], password):
 
-            session["logged_in"] = True
-            session["user_id"] = user["id"]
+            session["user"] = True
+            session["id"] = user["id"]
             session["name"] = user["name"]
             session["mobile"] = user["mobile"]
             session["email"] = user["email"]
 
             return redirect(url_for("dashboard"))
 
-        flash("Invalid Mobile Number or Password!", "danger")
+        flash("Invalid Mobile Number or Password", "danger")
 
     return render_template("login.html")
 
 
 # ===========================
-# Dashboard
+# User Dashboard
 # ===========================
 @app.route("/dashboard")
 def dashboard():
 
-    if "logged_in" not in session:
+    if "user" not in session:
         return redirect(url_for("login"))
 
     return render_template("dashboard.html")
 
 
 # ===========================
-# Logout
+# User Logout
 # ===========================
 @app.route("/logout")
 def logout():
@@ -150,12 +137,13 @@ def admin():
         username = request.form["username"]
         password = request.form["password"]
 
-        # Change these credentials if needed
-        if username == "admin" and password == "admin123":
+        if username == "UMESH1106" and password == "8919":
+
             session["admin"] = True
+
             return redirect(url_for("admin_dashboard"))
 
-        flash("Invalid Admin Username or Password.", "danger")
+        flash("Invalid Username or Password", "danger")
 
     return render_template("admin_login.html")
 
@@ -173,11 +161,12 @@ def admin_dashboard():
 
     users = conn.execute(
         """
-        SELECT id,
-               name,
-               mobile,
-               email,
-               created_at
+        SELECT
+            id,
+            name,
+            mobile,
+            email,
+            created_at
         FROM users
         ORDER BY id DESC
         """
@@ -199,13 +188,13 @@ def admin_logout():
 
     session.pop("admin", None)
 
-    flash("Admin logged out successfully.", "success")
+    flash("Admin Logged Out", "success")
 
     return redirect(url_for("admin"))
 
 
 # ===========================
-# Run Application
+# Run
 # ===========================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
