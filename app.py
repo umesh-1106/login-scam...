@@ -1,57 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+from database import get_db, create_tables
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = "your_secret_key_123"
+
+# Create database tables
+create_tables()
 
 
-# ==========================
-# Database Connection
-# ==========================
-
-def get_db():
-    conn = sqlite3.connect("attendance.db")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-# ==========================
-# Create Database
-# ==========================
-
-def init_db():
-    conn = get_db()
-    conn.execute("""
-    CREATE TABLE IF NOT EXISTS users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        mobile TEXT UNIQUE NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-    """)
-    conn.commit()
-    conn.close()
-
-
-init_db()
-
-
-# ==========================
+# ===========================
 # Home
-# ==========================
-
+# ===========================
 @app.route("/")
 def home():
     return redirect(url_for("login"))
 
 
-# ==========================
+# ===========================
 # Register
-# ==========================
-
+# ===========================
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -61,32 +29,32 @@ def register():
         mobile = request.form["mobile"]
         email = request.form["email"]
         password = request.form["password"]
-        confirm = request.form["confirm_password"]
+        confirm_password = request.form["confirm_password"]
 
-        if password != confirm:
+        if password != confirm_password:
             flash("Passwords do not match!", "danger")
             return redirect(url_for("register"))
 
         conn = get_db()
 
-        user = conn.execute(
+        existing = conn.execute(
             "SELECT * FROM users WHERE mobile=? OR email=?",
             (mobile, email)
         ).fetchone()
 
-        if user:
-            flash("Mobile number or Email already exists!", "danger")
+        if existing:
             conn.close()
+            flash("Mobile number or Email already registered.", "danger")
             return redirect(url_for("register"))
 
-        hashed = generate_password_hash(password)
+        hashed_password = generate_password_hash(password)
 
         conn.execute(
             """
-            INSERT INTO users(name,mobile,email,password)
-            VALUES(?,?,?,?)
+            INSERT INTO users(name, mobile, email, password)
+            VALUES (?, ?, ?, ?)
             """,
-            (name, mobile, email, hashed)
+            (name, mobile, email, hashed_password)
         )
 
         conn.commit()
@@ -111,10 +79,9 @@ def register():
     return render_template("register.html")
 
 
-# ==========================
+# ===========================
 # Login
-# ==========================
-
+# ===========================
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -142,15 +109,14 @@ def login():
 
             return redirect(url_for("dashboard"))
 
-        flash("Invalid Mobile Number or Password", "danger")
+        flash("Invalid Mobile Number or Password!", "danger")
 
     return render_template("login.html")
 
 
-# ==========================
+# ===========================
 # Dashboard
-# ==========================
-
+# ===========================
 @app.route("/dashboard")
 def dashboard():
 
@@ -160,24 +126,22 @@ def dashboard():
     return render_template("dashboard.html")
 
 
-# ==========================
+# ===========================
 # Logout
-# ==========================
-
+# ===========================
 @app.route("/logout")
 def logout():
 
     session.clear()
 
-    flash("Logged Out Successfully", "success")
+    flash("Logged out successfully.", "success")
 
     return redirect(url_for("login"))
 
 
-# ==========================
+# ===========================
 # Admin Login
-# ==========================
-
+# ===========================
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
 
@@ -186,21 +150,19 @@ def admin():
         username = request.form["username"]
         password = request.form["password"]
 
+        # Change these credentials if needed
         if username == "admin" and password == "admin123":
-
             session["admin"] = True
-
             return redirect(url_for("admin_dashboard"))
 
-        flash("Invalid Admin Credentials", "danger")
+        flash("Invalid Admin Username or Password.", "danger")
 
     return render_template("admin_login.html")
 
 
-# ==========================
+# ===========================
 # Admin Dashboard
-# ==========================
-
+# ===========================
 @app.route("/admin_dashboard")
 def admin_dashboard():
 
@@ -210,7 +172,15 @@ def admin_dashboard():
     conn = get_db()
 
     users = conn.execute(
-        "SELECT * FROM users ORDER BY id DESC"
+        """
+        SELECT id,
+               name,
+               mobile,
+               email,
+               created_at
+        FROM users
+        ORDER BY id DESC
+        """
     ).fetchall()
 
     conn.close()
@@ -221,21 +191,21 @@ def admin_dashboard():
     )
 
 
-# ==========================
+# ===========================
 # Admin Logout
-# ==========================
-
+# ===========================
 @app.route("/admin_logout")
 def admin_logout():
 
     session.pop("admin", None)
 
+    flash("Admin logged out successfully.", "success")
+
     return redirect(url_for("admin"))
 
 
-# ==========================
-# Run
-# ==========================
-
+# ===========================
+# Run Application
+# ===========================
 if __name__ == "__main__":
     app.run(debug=True)
