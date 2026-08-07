@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KMCE Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#edf3fb;
+
+display:flex;
+
+overflow-x:hidden;
+
+}
+
+/* Sidebar */
+
+.sidebar{
+
+position:fixed;
+
+left:0;
+
+top:0;
+
+width:260px;
+
+height:100vh;
+
+background:linear-gradient(180deg,#0f172a,#1e293b);
+
+color:white;
+
+padding-top:20px;
+
+box-shadow:5px 0 20px rgba(0,0,0,.25);
+
+transition:.4s;
+
+z-index:1000;
+
+}
+
+.logo{
+
+text-align:center;
+
+margin-bottom:30px;
+
+}
+
+.logo img{
+
+width:90px;
+
+height:90px;
+
+border-radius:50%;
+
+background:white;
+
+padding:5px;
+
+}
+
+.logo h2{
+
+margin-top:10px;
+
+font-size:22px;
+
+}
+
+.sidebar ul{
+
+list-style:none;
+
+}
+
+.sidebar ul li{
+
+margin:8px 15px;
+
+}
+
+.sidebar ul li a{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+padding:14px;
+
+text-decoration:none;
+
+color:white;
+
+font-size:17px;
+
+border-radius:10px;
+
+transition:.3s;
+
+}
+
+.sidebar ul li a:hover{
+
+background:#2563eb;
+
+transform:translateX(8px);
+
+}
+
+.sidebar ul li a.active{
+
+background:#2563eb;
+
+}
+
+/* Main */
+
+.main{
+
+margin-left:260px;
+
+width:100%;
+
+}
+
+/* Header */
+
+header{
+
+height:80px;
+
+background:white;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:0 30px;
+
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+
+}
+
+header h1{
+
+font-size:28px;
+
+color:#0f172a;
+
+}
+
+.profile{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+.profile img{
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+}
+
+.profile h3{
+
+font-size:17px;
+
+}
+
+.content{
+
+padding:30px;
+
+}
+
+/* Welcome */
+
+.welcome{
+
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+color:white;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 10px 20px rgba(0,0,0,.2);
+
+animation:fadeIn 1s;
+
+}
+
+.welcome h2{
+
+font-size:34px;
+
+margin-bottom:10px;
+
+}
+
+.welcome p{
+
+font-size:18px;
+
+}
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.menu{
+
+display:none;
+
+font-size:28px;
+
+cursor:pointer;
+
+}
+
+@media(max-width:900px){
+
+.sidebar{
+
+left:-260px;
+
+}
+
+.sidebar.show{
+
+left:0;
+
+}
+
+.main{
+
+margin-left:0;
+
+}
+
+.menu{
+
+display:block;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar" id="sidebar">
+
+<div class="logo">
+
+<img src="logo.png">
+
+<h2>KMCE ERP</h2>
+
+</div>
+
+<ul>
+
+<li>
+<a href="dashboard.html" class="active">
+<i class="fas fa-house"></i>
+Home
+</a>
+</li>
+
+<li>
+<a href="attendance.html">
+<i class="fas fa-calendar-check"></i>
+Attendance
+</a>
+</li>
+
+<li>
+<a href="students.html">
+<i class="fas fa-user-graduate"></i>
+Students
+</a>
+</li>
+
+<li>
+<a href="teachers.html">
+<i class="fas fa-chalkboard-teacher"></i>
+Teachers
+</a>
+</li>
+
+<li>
+<a href="departments.html">
+<i class="fas fa-building"></i>
+Departments
+</a>
+</li>
+
+<li>
+<a href="reports.html">
+<i class="fas fa-chart-column"></i>
+Reports
+</a>
+</li>
+
+<li>
+<a href="attendance-history.html">
+<i class="fas fa-clock-rotate-left"></i>
+Attendance History
+</a>
+</li>
+
+<li>
+<a href="settings.html">
+<i class="fas fa-gear"></i>
+Settings
+</a>
+</li>
+
+<li>
+<a href="index.html">
+<i class="fas fa-right-from-bracket"></i>
+Logout
+</a>
+</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<header>
+
+<div class="menu" onclick="toggleMenu()">
+
+☰
+
+</div>
+
+<h1>
+
+KESHAVA MEMORIAL COLLEGE OF ENGINEERING
+
+</h1>
+
+<div class="profile">
+
+<img src="logo.png">
+
+<div>
+
+<h3>Administrator</h3>
+
+<p>Welcome Back</p>
+
+</div>
+
+</div>
+
+</header>
+
+<div class="content">
+
+<div class="welcome">
+
+<h2>
+
+Welcome to KMCE ERP Dashboard
+
+</h2>
+
+<p>
+
+Manage Attendance, Students, Teachers and Reports from one place.
+
+</p>
+
+</div>
+
+<!-- PART 2 WILL START HERE -->
+
+</div>
+
+</div>
+
+<script>
+
+function toggleMenu(){
+
+document.getElementById("sidebar").classList.toggle("show");
+
+}
+
+</script>
+
+</body>
+
+</html>
